@@ -1,113 +1,83 @@
-import Image from "next/image";
+"use client";
+
+import MultiStepForm, {
+  MultiStepFormStepType,
+} from "@/components/forms/multi-step-form";
+import PersonalInfoStep from "@/components/forms/steps/personal-info-step";
+import RestaurantAddressStep from "@/components/forms/steps/restaurant-address-step";
+import RestaurantInfoStep from "@/components/forms/steps/restaurant-info-step";
+import { Card, CardContent } from "@/components/ui/card";
+import { z } from "zod";
+
+const steps: MultiStepFormStepType[] = [
+  {
+    label: "Restaurant - Info",
+    zodSchema: z.object({
+      restaurantName: z
+        .string()
+        .min(
+          3,
+          "Der Name deines Restaurant muss mindestens 3 Zeichen lang sein.",
+        ),
+      restaurantCode: z.string().min(10, ""),
+    }),
+    content: <RestaurantInfoStep />,
+    initalValues: {
+      restaurantName: "",
+      restaurantCode: "",
+    },
+  },
+  {
+    label: "Restaurant - Addresse",
+    zodSchema: z.object({
+      restaurantAddressStreet: z.string().min(2, "Pflichtfeld").max(100), // Minimum 2 characters, maximum 100 characters
+      restaurantAddressNumber: z.string().min(1, "Pflichtfeld").max(10), // Minimum 1 character, maximum 10 characters
+      restaurantAddressZip: z
+        .string()
+        .min(1, "Pflichtfeld")
+        .regex(/^\d{5}$/, "Ungültige Postleitzahl"), // German ZIP code pattern
+      restaurantAddressCity: z.string().min(2, "Pflichtfeld").max(50), // Minimum 2 characters, maximum 50 characters
+      restaurantAddressCountry: z.string().min(1, "Pflichtfeld"),
+    }),
+    content: <RestaurantAddressStep />,
+    initalValues: {
+      restaurantAddressStreet: "",
+      restaurantAddressNumber: "",
+      restaurantAddressZip: "",
+      restaurantAddressCity: "",
+      restaurantAddressCountry: "Deutschland",
+    },
+  },
+  {
+    label: "Persönlich - Info",
+    zodSchema: z.object({
+      personalFirstName: z
+        .string()
+        .min(3, "Dein Vorname muss mindestens 3 Zeichen lang sein."),
+      personalLastName: z
+        .string()
+        .min(3, "Dein Nachname muss mindestens 3 Zeichen lang sein."),
+    }),
+    content: <PersonalInfoStep />,
+    initalValues: {
+      personalFirstName: "",
+      personalLastName: "",
+    },
+  },
+];
 
 export default function Home() {
+  const onFinish = async (data: any) => {
+    console.log(JSON.stringify(data));
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main className="w-screen h-screen flex items-center justify-center p-5">
+      <Card className="w-full md:w-[60%] lg:w-[40%] xl:w-[30%]">
+        <CardContent className="w-full h-full flex items-center justify-center p-5">
+          <MultiStepForm steps={steps} onFinish={onFinish} />
+        </CardContent>
+      </Card>
     </main>
   );
 }
