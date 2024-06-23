@@ -1,20 +1,24 @@
 "use client";
 
+import { useEffect } from "react";
+
 const DisableInputZoom = () => {
-  document.addEventListener("gesturestart", function(e) {
-    e.preventDefault();
-    (document.body.style as any).zoom = 0.99;
-  });
+  useEffect(() => {
+    document.addEventListener("gesturestart", function(e) {
+      e.preventDefault();
+      (document.body.style as any).zoom = 0.99;
+    });
 
-  document.addEventListener("gesturechange", function(e) {
-    e.preventDefault();
+    document.addEventListener("gesturechange", function(e) {
+      e.preventDefault();
 
-    (document.body.style as any).zoom = 0.99;
-  });
-  document.addEventListener("gestureend", function(e) {
-    e.preventDefault();
-    (document.body.style as any).zoom = 1;
-  });
+      (document.body.style as any).zoom = 0.99;
+    });
+    document.addEventListener("gestureend", function(e) {
+      e.preventDefault();
+      (document.body.style as any).zoom = 1;
+    });
+  }, []);
 
   return <span className="w-0 h-0 hidden"></span>;
 };
