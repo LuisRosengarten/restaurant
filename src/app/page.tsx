@@ -3,6 +3,8 @@
 import MultiStepForm, {
   MultiStepFormStepType,
 } from "@/components/forms/multi-step-form";
+import AccountEmailStep from "@/components/forms/steps/account-email-step";
+import PersonalAddressStep from "@/components/forms/steps/personal-address-step";
 import PersonalInfoStep from "@/components/forms/steps/personal-info-step";
 import RestaurantAddressStep from "@/components/forms/steps/restaurant-address-step";
 import RestaurantInfoStep from "@/components/forms/steps/restaurant-info-step";
@@ -62,6 +64,39 @@ const steps: MultiStepFormStepType[] = [
     initalValues: {
       personalFirstName: "",
       personalLastName: "",
+    },
+  },
+  {
+    label: "Persönlich - Addresse",
+    zodSchema: z.object({
+      personalAddressStreet: z.string().min(2, "Pflichtfeld").max(100), // Minimum 2 characters, maximum 100 characters
+      personalAddressNumber: z.string().min(1, "Pflichtfeld").max(10), // Minimum 1 character, maximum 10 characters
+      personalAddressZip: z
+        .string()
+        .min(1, "Pflichtfeld")
+        .regex(/^\d{5}$/, "Ungültige Postleitzahl"), // German ZIP code pattern
+      personalAddressCity: z.string().min(2, "Pflichtfeld").max(50), // Minimum 2 characters, maximum 50 characters
+      personalAddressCountry: z.string().min(1, "Pflichtfeld"),
+    }),
+    content: <PersonalAddressStep />,
+    initalValues: {
+      personalAddressStreet: "",
+      personalAddressNumber: "",
+      personalAddressZip: "",
+      personalAddressCity: "",
+      personalAddressCountry: "Deutschland",
+    },
+  },
+  {
+    label: "Account - Email",
+    zodSchema: z.object({
+      accountEmail: z
+        .string()
+        .email("Bitte gib eine gültige Email-Addresse an."),
+    }),
+    content: <AccountEmailStep />,
+    initalValues: {
+      accountEmail: "",
     },
   },
 ];
